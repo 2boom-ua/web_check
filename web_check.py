@@ -50,7 +50,6 @@ def web_check():
 	web_list = []
 	count_hosts = 0
 	status_message = old_status_str = new_status_str = ""
-	mode = mode_command = "silent"
 	if os.path.exists(f"{current_path}/url_list.json"):
 		parsed_json = json.loads(open(f"{current_path}/url_list.json", "r").read())
 		web_list = parsed_json["list"]
@@ -71,31 +70,24 @@ def web_check():
 			try:
 				response = urlopen(req)#timeout
 			except HTTPError as e:
-				mode = "info"
 				li[i] = "1"
-				status_message += f"{RED_DOT} - {hbold(web_list[i][1])}, error:\n- {e.code}\n"
+				status_message += f"{RED_DOT} - {hbold(web_list[i][1])}, error: {e.code}\n"
 			except URLError as e:
-				mode = "info"
 				li[i] = "1"
-				status_message += f"{RED_DOT} - {hbold(web_list[i][1])}, reason:\n- {e.reason}\n"
+				status_message += f"{RED_DOT} - {hbold(web_list[i][1])}, reason: {e.reason}\n"
 			else:
 				li[i] = "0"
 				count_hosts += 1
 		new_status_str = "".join(li)
-		if old_status_str == new_status_str:
-			mode = "silent"
-		else:
-			mode = "info"
-			with open(tmp_file, "w") as status_file:
-				status_file.write(new_status_str)
-				status_file.close()
 		bad_hosts = total_hosts - count_hosts
 		if count_hosts == total_hosts:
 			status_message = f"{GREEN_DOT} - controlled host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}"
 		else:
 			status_message = f"controlled host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}\n{status_message}"
-			
-		if mode_command == "info" or mode == "info":
+		if old_status_str != new_status_str:
+			with open(tmp_file, "w") as status_file:
+				status_file.write(new_status_str)
+				status_file.close()
 			try:
 				tb.send_message(CHAT_ID, f"{hostname} (hosts)\n{status_message}", parse_mode='html')
 			except Exception as e:
