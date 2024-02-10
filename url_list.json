@@ -1,6 +1,7 @@
 {
 	"list": [
-		["url-one", "name one"],
-		["url-two", "name two"]
+		["http://nuc10.kyiv.ua", "Zeropage"],
+		["https://nuc10.kyiv.ua/nextcloud", "Nextcloud"],
+		["https://immich.nuc10.kyiv.ua", "Immich"]
 	]
 }

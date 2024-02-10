@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# Copyright (c) 2boom 2023
+# Copyright (c) 2boom 2023-24
 
 import json
 import telebot
 import socket, errno
-import os.path
 import os
 import time
 from schedule import every, repeat, run_pending
@@ -13,86 +12,85 @@ from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 import ssl
 
-def get_host_name():
-	if os.path.exists("/proc/sys/kernel/hostname"):
-		return open("/proc/sys/kernel/hostname").read().strip("\n")
-	else:
-		return ""
-		
-def hbold(item):
-	return telebot.formatting.hbold(item)
+def get_str_from_file(filename : str):
+	if os.path.exists(filename):
+		with open(filename, "r") as file:
+			ret = file.read().strip("\n")
+		file.close()
+		return ret
+	return ""
+	
+def bold_html_txt(message : str):
+	return f"<b>{message}</b>"
 
-current_path = "/root/web_check"
-hostname = hbold(get_host_name())
-ssl._create_default_https_context = ssl._create_unverified_context
-if os.path.exists(f"{current_path}/config.json"):
-	parsed_json = json.loads(open(f"{current_path}/config.json", "r").read())
-	min_repeat = int(parsed_json["minutes"])
-else:
-	min_repeat = 3
-RED_DOT, GREEN_DOT  = "\U0001F534", "\U0001F7E2"
-
-if os.path.exists(f"{current_path}/telegram_bot.json"):			
-	parsed_json = json.loads(open(f"{current_path}/telegram_bot.json", "r").read())
-	TOKEN = parsed_json["TOKEN"]
-	CHAT_ID = parsed_json["CHAT_ID"]
-	tb = telebot.TeleBot(TOKEN)
+def telegram_message(message : str):
 	try:
-		tb.send_message(CHAT_ID, f"{hostname} (hosts)\nhosts monitor started: check period {min_repeat} minute(s)", parse_mode='html')
+		tb.send_message(CHAT_ID, message, parse_mode='html')
 	except Exception as e:
 		print(f"error: {e}")
-else:
-	print("telegram_bot.json not nound")
-	
-@repeat(every(min_repeat).minutes)
+
+if __name__ == "__main__":	
+	CURRENT_PATH = "/root/web_check"
+	HOSTNAME = bold_html_txt(get_str_from_file("/proc/sys/kernel/hostname"))
+	RED_DOT, GREEN_DOT  = "\U0001F534", "\U0001F7E2"
+	ssl._create_default_https_context = ssl._create_unverified_context
+	if os.path.exists(f"{CURRENT_PATH}/config.json"):
+		parsed_json = json.loads(open(f"{CURRENT_PATH}/config.json", "r").read())
+		TOKEN = parsed_json["TOKEN"]
+		CHAT_ID = parsed_json["CHAT_ID"]
+		MIN_REPEAT = int(parsed_json["MIN_REPEAT"])
+		tb = telebot.TeleBot(TOKEN)
+		telegram_message(f"{HOSTNAME} (hosts)\nhosts monitor started: check period {MIN_REPEAT} minute(s)")
+	else:
+		print("config.json not nound")
+
+
+@repeat(every(MIN_REPEAT).minutes)
 def web_check():
-	tmp_file = "/tmp/status_web.tmp"
-	web_list = []
-	count_hosts = 0
+	TMP_FILE = "/tmp/status_web.tmp"
+	WEB_LIST = []
+	COUNT_HOSTS = 0
 	status_message = old_status_str = new_status_str = ""
-	if os.path.exists(f"{current_path}/url_list.json"):
-		parsed_json = json.loads(open(f"{current_path}/url_list.json", "r").read())
-		web_list = parsed_json["list"]
-		total_hosts = len(web_list)
-		if not os.path.exists(tmp_file) or total_hosts != os.path.getsize(tmp_file):
-			with open(tmp_file, "w") as status_file:
-				for i in range(total_hosts):
+	if os.path.exists(f"{CURRENT_PATH}/url_list.json"):
+		parsed_json = json.loads(open(f"{CURRENT_PATH}/url_list.json", "r").read())
+		WEB_LIST = parsed_json["list"]
+		TOTAL_HOSTS = len(WEB_LIST)
+		if not os.path.exists(TMP_FILE) or TOTAL_HOSTS != os.path.getsize(TMP_FILE):
+			with open(TMP_FILE, "w") as file:
+				for i in range(TOTAL_HOSTS):
 					old_status_str += "0"
-				status_file.write(old_status_str)
-			status_file.close()
-		with open(tmp_file, "r") as status_file:
-			old_status_str = status_file.read()
+				file.write(old_status_str)
+			file.close()
+		with open(TMP_FILE, "r") as file:
+			old_status_str = file.read()
 			li = list(old_status_str)
-			status_file.close()
+		file.close()
 			
-		for i in range(total_hosts):
-			req = Request(web_list[i][0], headers={'User-Agent': 'Mozilla/5.0'})
+		for i in range(TOTAL_HOSTS):
+			req = Request(WEB_LIST[i][0], headers={'User-Agent': 'Mozilla/5.0'})
 			try:
 				response = urlopen(req)#timeout
 			except HTTPError as e:
 				li[i] = "1"
-				status_message += f"{RED_DOT} - {hbold(web_list[i][1])}, error: {e.code}\n"
+				status_message += f"{RED_DOT} - {bold_html_txt(WEB_LIST[i][1])}, error: {e.code}\n"
 			except URLError as e:
 				li[i] = "1"
-				status_message += f"{RED_DOT} - {hbold(web_list[i][1])}, reason: {e.reason}\n"
+				status_message += f"{RED_DOT} - {bold_html_txt(WEB_LIST[i][1])}, reason: {e.reason}\n"
 			else:
 				li[i] = "0"
-				count_hosts += 1
+				COUNT_HOSTS += 1
 		new_status_str = "".join(li)
-		bad_hosts = total_hosts - count_hosts
-		if count_hosts == total_hosts:
-			status_message = f"{GREEN_DOT} - controlled host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}"
+		BAD_HOSTS = TOTAL_HOSTS - COUNT_HOSTS
+		if COUNT_HOSTS == TOTAL_HOSTS:
+			status_message = f"{GREEN_DOT} - controlled host(s):\n|ALL| - {TOTAL_HOSTS}, |OK| - {COUNT_HOSTS}, |BAD| - {BAD_HOSTS}"
 		else:
-			status_message = f"controlled host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}\n{status_message}"
+			status_message = f"controlled host(s):\n|ALL| - {TOTAL_HOSTS}, |OK| - {COUNT_HOSTS}, |BAD| - {BAD_HOSTS}\n{status_message}"
 		if old_status_str != new_status_str:
-			with open(tmp_file, "w") as status_file:
-				status_file.write(new_status_str)
-				status_file.close()
-			try:
-				tb.send_message(CHAT_ID, f"{hostname} (hosts)\n{status_message}", parse_mode='html')
-			except Exception as e:
-				print(f"error: {e}")
-			print(f"{hostname} (hosts)\n{status_message}")
+			with open(TMP_FILE, "w") as file:
+				file.write(new_status_str)
+			file.close()
+			telegram_message(f"{HOSTNAME} (hosts)\n{status_message}")
+			print(f"{HOSTNAME} (hosts)\n{status_message}")
 	else:
 		print("url_list.json not nound")
 	
