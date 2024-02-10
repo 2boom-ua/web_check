@@ -1,7 +1,7 @@
 {
 	"list": [
-		["http://nuc10.kyiv.ua", "Zeropage"],
-		["https://nuc10.kyiv.ua/nextcloud", "Nextcloud"],
-		["https://immich.nuc10.kyiv.ua", "Immich"]
+		["http://url", "name_of_url"],
+		["http://url", "name_of_url"]],
+		["http://url", "name_of_url"]]
 	]
 }
