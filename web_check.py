@@ -32,21 +32,20 @@ if __name__ == "__main__":
 	else:
 		print("config.json not nound")
 
-
 @repeat(every(MIN_REPEAT).minutes)
 def web_check():
 	TMP_FILE = "/tmp/status_web.tmp"
-	WEB_LIST = []
-	COUNT_HOSTS = 0
+	web_list = []
+	count_hosts = 0
 	RED_DOT, GREEN_DOT  = "\U0001F534", "\U0001F7E2"
 	status_message = old_status_str = new_status_str = ""
 	if os.path.exists(f"{CURRENT_PATH}/url_list.json"):
 		parsed_json = json.loads(open(f"{CURRENT_PATH}/url_list.json", "r").read())
-		WEB_LIST = parsed_json["list"]
-		TOTAL_HOSTS = len(WEB_LIST)
-		if not os.path.exists(TMP_FILE) or TOTAL_HOSTS != os.path.getsize(TMP_FILE):
+		web_list = parsed_json["list"]
+		total_hosts = len(web_list)
+		if not os.path.exists(TMP_FILE) or total_hosts != os.path.getsize(TMP_FILE):
 			with open(TMP_FILE, "w") as file:
-				old_status_str += "0" * TOTAL_HOSTS
+				old_status_str += "0" * total_hosts
 				file.write(old_status_str)
 			file.close()
 		else:
@@ -54,26 +53,25 @@ def web_check():
 				old_status_str = file.read()
 				li = list(old_status_str)
 			file.close()
-			
-		for i in range(TOTAL_HOSTS):
-			req = Request(WEB_LIST[i][0], headers={'User-Agent': 'Mozilla/5.0'})
+		for i in range(total_hosts):
+			req = Request(web_list[i][0], headers={'User-Agent': 'Mozilla/5.0'})
 			try:
 				response = urlopen(req)#timeout
 			except HTTPError as e:
 				li[i] = "1"
-				status_message += f"{RED_DOT} - *{WEB_LIST[i][1]}*, error: {e.code}\n"
+				status_message += f"{RED_DOT} - *{web_list[i][1]}*, error: _{e.code}_\n"
 			except URLError as e:
 				li[i] = "1"
-				status_message += f"{RED_DOT} - *{WEB_LIST[i][1]}*, reason: {e.reason}\n"
+				status_message += f"{RED_DOT} - *{web_list[i][1]}*, reason: _{e.reason}_\n"		
 			else:
 				li[i] = "0"
-				COUNT_HOSTS += 1
+				count_hosts += 1
 		new_status_str = "".join(li)
-		BAD_HOSTS = TOTAL_HOSTS - COUNT_HOSTS
-		if COUNT_HOSTS == TOTAL_HOSTS:
-			status_message = f"{GREEN_DOT} - controlled host(s):\n|ALL| - {TOTAL_HOSTS}, |OK| - {COUNT_HOSTS}, |BAD| - {BAD_HOSTS}"
+		bad_hosts = total_hosts - count_hosts
+		if count_hosts == total_hosts:
+			status_message = f"{GREEN_DOT} - controlled host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}"
 		else:
-			status_message = f"controlled host(s):\n|ALL| - {TOTAL_HOSTS}, |OK| - {COUNT_HOSTS}, |BAD| - {BAD_HOSTS}\n{status_message}"
+			status_message = f"controlled host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}\n{status_message}"
 		if old_status_str != new_status_str:
 			with open(TMP_FILE, "w") as file:
 				file.write(new_status_str)
