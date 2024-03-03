@@ -45,7 +45,7 @@ def web_check():
 		total_hosts = len(web_list)
 		if not os.path.exists(TMP_FILE) or total_hosts != os.path.getsize(TMP_FILE):
 			with open(TMP_FILE, "w") as file:
-				old_status_str += "0" * total_hosts
+				old_status_str = "0" * total_hosts
 				file.write(old_status_str)
 			file.close()
 		else:
