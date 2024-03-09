@@ -24,11 +24,11 @@ if __name__ == "__main__":
 	ssl._create_default_https_context = ssl._create_unverified_context
 	if os.path.exists(f"{CURRENT_PATH}/config.json"):
 		parsed_json = json.loads(open(f"{CURRENT_PATH}/config.json", "r").read())
-		TOKEN = parsed_json["TOKEN"]
-		CHAT_ID = parsed_json["CHAT_ID"]
+		TOKEN = parsed_json["TELEGRAM"]["TOKEN"]
+		CHAT_ID = parsed_json["TELEGRAM"]["CHAT_ID"]
 		MIN_REPEAT = int(parsed_json["MIN_REPEAT"])
 		tb = telebot.TeleBot(TOKEN)
-		telegram_message(f"*{HOSTNAME}* (hosts)\nhosts monitor started: check period {MIN_REPEAT} minute(s)")
+		telegram_message(f"*{HOSTNAME}* (hosts)\nhosts monitor started:\n- polling period {MIN_REPEAT} minute(s)")
 	else:
 		print("config.json not nound")
 
@@ -59,19 +59,19 @@ def web_check():
 				response = urlopen(req)#timeout
 			except HTTPError as e:
 				li[i] = "1"
-				status_message += f"{RED_DOT} - *{web_list[i][1]}*, error: _{e.code}_\n"
+				status_message += f"{RED_DOT} *{web_list[i][1]}*, error: _{e.code}_\n"
 			except URLError as e:
 				li[i] = "1"
-				status_message += f"{RED_DOT} - *{web_list[i][1]}*, reason: _{e.reason}_\n"		
+				status_message += f"{RED_DOT} *{web_list[i][1]}*, reason: _{e.reason}_\n"		
 			else:
 				li[i] = "0"
 				count_hosts += 1
 		new_status_str = "".join(li)
 		bad_hosts = total_hosts - count_hosts
 		if count_hosts == total_hosts:
-			status_message = f"{GREEN_DOT} - controlled host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}"
+			status_message = f"{GREEN_DOT} monitoring host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}"
 		else:
-			status_message = f"controlled host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}\n{status_message}"
+			status_message = f"monitoring host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}\n{status_message}"
 		if old_status_str != new_status_str:
 			with open(TMP_FILE, "w") as file:
 				file.write(new_status_str)
