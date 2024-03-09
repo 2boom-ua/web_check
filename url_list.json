@@ -1,7 +1,7 @@
 {
 	"list": [
 		["http://url", "name_of_url"],
-		["http://url", "name_of_url"]],
-		["http://url", "name_of_url"]]
+		["http://url", "name_of_url"],
+		["http://url", "name_of_url"]
 	]
 }
