@@ -48,11 +48,10 @@ def web_check():
 				old_status_str = "0" * total_hosts
 				file.write(old_status_str)
 			file.close()
-		else:
-			with open(TMP_FILE, "r") as file:
-				old_status_str = file.read()
-				li = list(old_status_str)
-			file.close()
+		with open(TMP_FILE, "r") as file:
+			old_status_str = file.read()
+			li = list(old_status_str)
+		file.close()
 		for i in range(total_hosts):
 			req = Request(web_list[i][0], headers={'User-Agent': 'Mozilla/5.0'})
 			try:
