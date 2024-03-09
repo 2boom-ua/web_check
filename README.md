@@ -1,6 +1,6 @@
 # web_check
 web check notifier
-```
+
 **config.json**
 ```
 {
