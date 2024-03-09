@@ -8,8 +8,7 @@ web check notifier
 		"TOKEN": "your_token",
 		"CHAT_ID": "your_chat_id"
 	},
-	"SEC_REPEAT": 10,
-	"SHORT_MESSAGE": false
+	"MIN_REPEAT": 1
 }
 ```
 **make as service**
