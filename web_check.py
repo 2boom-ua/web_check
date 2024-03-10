@@ -19,7 +19,7 @@ def telegram_message(message : str):
 		print(f"error: {e}")
 
 if __name__ == "__main__":	
-	CURRENT_PATH = "/root/web_check"
+	CURRENT_PATH =  os.path.dirname(os.path.realpath(__file__))
 	HOSTNAME = open('/proc/sys/kernel/hostname', 'r').read().strip('\n')
 	ssl._create_default_https_context = ssl._create_unverified_context
 	if os.path.exists(f"{CURRENT_PATH}/config.json"):
