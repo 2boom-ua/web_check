@@ -23,7 +23,7 @@ After=multi-user.target
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/bin/python3 /root/web_check/web_check.py
+ExecStart=/usr/bin/python3 /opt/web_check/web_check.py
 
 [Install]
 WantedBy=multi-user.target
