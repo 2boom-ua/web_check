@@ -6,11 +6,11 @@ import json
 import telebot
 import socket, errno
 import os
+import ssl
 import time
 from schedule import every, repeat, run_pending
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
-import ssl
 
 def telegram_message(message : str):
 	try:
@@ -28,7 +28,7 @@ if __name__ == "__main__":
 		CHAT_ID = parsed_json["TELEGRAM"]["CHAT_ID"]
 		MIN_REPEAT = int(parsed_json["MIN_REPEAT"])
 		tb = telebot.TeleBot(TOKEN)
-		telegram_message(f"*{HOSTNAME}* (hosts)\nhosts monitor started:\n- polling period {MIN_REPEAT} minute(s)")
+		telegram_message(f"*{HOSTNAME}* (hosts)\nhosts monitor started:\n- polling period {MIN_REPEAT} minute(s).")
 	else:
 		print("config.json not nound")
 
