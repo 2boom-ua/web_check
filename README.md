@@ -1,5 +1,5 @@
 # web_check
-web check notifier
+web check notifier for Telegram
 
 **config.json**
 ```
