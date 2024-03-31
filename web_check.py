@@ -8,15 +8,22 @@ import socket, errno
 import os
 import ssl
 import time
+import discord_notify as dn
 from schedule import every, repeat, run_pending
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
-def telegram_message(message : str):
-	try:
-		tb.send_message(CHAT_ID, message, parse_mode='markdown')
-	except Exception as e:
-		print(f"error: {e}")
+def send_message(message : str):
+	if TELEGRAM_ON:
+		try:
+			tb.send_message(CHAT_ID, message, parse_mode="markdown")
+		except Exception as e:
+			print(f"error: {e}")
+	if DISCORD_ON:
+		try:
+			notifier.send(message.replace("*", "**").replace("\t", ""), print_message=False)
+		except Exception as e:
+			print(f"error: {e}")
 
 if __name__ == "__main__":	
 	CURRENT_PATH =  os.path.dirname(os.path.realpath(__file__))
@@ -24,11 +31,20 @@ if __name__ == "__main__":
 	ssl._create_default_https_context = ssl._create_unverified_context
 	if os.path.exists(f"{CURRENT_PATH}/config.json"):
 		parsed_json = json.loads(open(f"{CURRENT_PATH}/config.json", "r").read())
-		TOKEN = parsed_json["TELEGRAM"]["TOKEN"]
-		CHAT_ID = parsed_json["TELEGRAM"]["CHAT_ID"]
+		TELEGRAM_ON = parsed_json["TELEGRAM"]["ON"]
+		DISCORD_ON = parsed_json["DISCORD"]["ON"]
+		if TELEGRAM_ON:
+			TOKEN = parsed_json["TELEGRAM"]["TOKEN"]
+			CHAT_ID = parsed_json["TELEGRAM"]["CHAT_ID"]
+			tb = telebot.TeleBot(TOKEN)
+		if DISCORD_ON:
+			DISCORD_WEB = parsed_json["DISCORD"]["WEB"]
+			notifier = dn.Notifier(DISCORD_WEB)
 		MIN_REPEAT = int(parsed_json["MIN_REPEAT"])
-		tb = telebot.TeleBot(TOKEN)
-		telegram_message(f"*{HOSTNAME}* (hosts)\nhosts monitor started:\n- polling period {MIN_REPEAT} minute(s).")
+		send_message(f"*{HOSTNAME}* (hosts)\nhosts monitor started:\n\
+		- polling period {MIN_REPEAT} minute(s),\n\
+		- messenging Telegram: {str(TELEGRAM_ON).lower()},\n\
+		- messenging Discord: {str(DISCORD_ON).lower()}.")
 	else:
 		print("config.json not nound")
 
@@ -58,10 +74,10 @@ def web_check():
 				response = urlopen(req)#timeout
 			except HTTPError as e:
 				li[i] = "1"
-				status_message += f"{RED_DOT} *{web_list[i][1]}*, error: _{e.code}_\n"
+				status_message += f"{RED_DOT} *{web_list[i][1]}*, error: {e.code}\n"
 			except URLError as e:
 				li[i] = "1"
-				status_message += f"{RED_DOT} *{web_list[i][1]}*, reason: _{e.reason}_\n"		
+				status_message += f"{RED_DOT} *{web_list[i][1]}*, reason: {e.reason}\n"		
 			else:
 				li[i] = "0"
 				count_hosts += 1
@@ -75,7 +91,7 @@ def web_check():
 			with open(TMP_FILE, "w") as file:
 				file.write(new_status_str)
 			file.close()
-			telegram_message(f"*{HOSTNAME}* (hosts)\n{status_message}")
+			send_message(f"*{HOSTNAME}* (hosts)\n{status_message}")
 	else:
 		print("url_list.json not nound")
 	
