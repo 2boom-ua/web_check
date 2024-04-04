@@ -1,5 +1,7 @@
 # web_check
-web check notifier for Telegram, Discord
+web check notifier for Telegram, Discord, Gotify
+
+*** [Gotify - a simple server for sending and receiving messages (in real time per WebSocket). ](https://github.com/gotify/server)
 
 **config.json**
 ```
@@ -12,6 +14,11 @@ web check notifier for Telegram, Discord
 	"DISCORD": {
 		"ON": true,
 		"WEB": "web_your_channel"
+	},
+	"GOTIFY": {
+		"ON": true,
+		"TOKEN": "your_token",
+		"WEB": "server_url/message"
 	},
 	"MIN_REPEAT": 1
 }
