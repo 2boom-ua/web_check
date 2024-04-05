@@ -8,7 +8,7 @@ import socket, errno
 import os
 import ssl
 import time
-import requests
+from gotify import Gotify
 import discord_notify as dn
 from schedule import every, repeat, run_pending
 from urllib.request import Request, urlopen
@@ -27,10 +27,11 @@ def send_message(message : str):
 			print(f"error: {e}")
 	if GOTIFY_ON:
 		message = message.replace("*", "").replace("\t", "")
+		gotify = Gotify(base_url=GOTIFY_WEB, app_token=GOTIFY_TOKEN)
 		try:
-			response = requests.post(f'{GOTIFY_WEB}?token={GOTIFY_TOKEN}', json={"message": message})
-		except HTTPError as e:
-			print(f"reason: {e.reason}")
+			gotify.create_message(message)
+		except Exception as e:
+			print(f"error: {e}")
 
 if __name__ == "__main__":	
 	CURRENT_PATH =  os.path.dirname(os.path.realpath(__file__))
