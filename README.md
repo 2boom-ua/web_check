@@ -1,5 +1,5 @@
 # web_check
-web check notifier for Telegram, Discord, Gotify
+web check informer for Telegram, Discord, Gotify as linux service
 
 *** [Gotify - a simple server for sending and receiving messages (in real time per WebSocket). ](https://github.com/gotify/server)
 
