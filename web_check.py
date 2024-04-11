@@ -14,7 +14,6 @@ import discord_notify as dn
 from schedule import every, repeat, run_pending
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
-from pushbullet import Pushbullet
 
 def send_message(message : str):
 	message = message.replace("\t", "")
@@ -44,7 +43,9 @@ def send_message(message : str):
 			print(f"error: {e}")
 	if PUSHBULLET_ON:
 		try:
-			push = pb.push_note(header, message)
+			requests.post('https://api.pushbullet.com/v2/pushes',\
+			json={'type': 'note', 'title': header, 'body': message},\
+			headers={'Access-Token': PUSHBULLET_API, 'Content-Type': 'application/json'})
 		except Exception as e:
 			print(f"error: {e}")
 			
@@ -90,7 +91,6 @@ if __name__ == "__main__":
 			NTFY_SUB = parsed_json["NTFY"]["SUB"]
 		if PUSHBULLET_ON:
 			PUSHBULLET_API = parsed_json["PUSHBULLET"]["API"]
-			pb = Pushbullet(PUSHBULLET_API)
 		MIN_REPEAT = int(parsed_json["MIN_REPEAT"])
 		send_message(f"*{HOSTNAME}* (hosts)\nhosts monitor:\n{messaging_service()}- polling period: {MIN_REPEAT} minute(s).")
 	else:
