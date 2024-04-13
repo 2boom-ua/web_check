@@ -1,5 +1,5 @@
 # web_check
-web check informer for Telegram, Discord, Gotify, Ntfy, Pushbullet as linux service
+web check informer for Telegram, Discord, Gotify, Ntfy, Pushbullet, Slack as linux service
 
 ```
 pip install -r requirements.txt
@@ -15,7 +15,7 @@ pip install -r requirements.txt
 	},
 	"DISCORD": {
 		"ON": true,
-		"WEB": "web_your_channel"
+		"WEB": "web_hook_url"
 	},
 	"GOTIFY": {
 		"ON": true,
@@ -30,6 +30,10 @@ pip install -r requirements.txt
 	"PUSHBULLET": {
 		"ON": false,
 		"API": "your_api_key"
+	},
+	"SLACK": {
+		"ON": true,
+		"WEB": "web_hook_url"
 	},
 	"MIN_REPEAT": 1
 }
