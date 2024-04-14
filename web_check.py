@@ -75,7 +75,7 @@ if __name__ == "__main__":
 	CURRENT_PATH =  os.path.dirname(os.path.realpath(__file__))
 	HOSTNAME = open('/proc/sys/kernel/hostname', 'r').read().strip('\n')
 	ssl._create_default_https_context = ssl._create_unverified_context
-	TELEGRAM_ON = DISCORD_ON = GOTIFY_ON = NTFY_ON = SLACK_ON = False
+	TELEGRAM_ON = DISCORD_ON = GOTIFY_ON = NTFY_ON = SLACK_ON = PUSHBULLET_ON = False
 	TOKEN = CHAT_ID = DISCORD_WEB = GOTIFY_WEB = GOTIFY_TOKEN = NTFY_WEB = NTFY_SUB = PUSHBULLET_API = SLACK_WEB = ""
 	if os.path.exists(f"{CURRENT_PATH}/config.json"):
 		parsed_json = json.loads(open(f"{CURRENT_PATH}/config.json", "r").read())
