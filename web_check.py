@@ -76,7 +76,7 @@ if __name__ == "__main__":
 	HOSTNAME = open('/proc/sys/kernel/hostname', 'r').read().strip('\n')
 	ssl._create_default_https_context = ssl._create_unverified_context
 	TELEGRAM_ON = DISCORD_ON = GOTIFY_ON = NTFY_ON = SLACK_ON = PUSHBULLET_ON = False
-	TOKEN = CHAT_ID = DISCORD_WEB = GOTIFY_WEB = GOTIFY_TOKEN = NTFY_WEB = NTFY_SUB = PUSHBULLET_API = SLACK_WEB = ""
+	TOKEN = CHAT_ID = DISCORD_WEB = GOTIFY_WEB = GOTIFY_TOKEN = NTFY_WEB = NTFY_SUB = PUSHBULLET_API = SLACK_WEB = MESSAGING_SERVICE = ""
 	if os.path.exists(f"{CURRENT_PATH}/config.json"):
 		parsed_json = json.loads(open(f"{CURRENT_PATH}/config.json", "r").read())
 		TELEGRAM_ON = parsed_json["TELEGRAM"]["ON"]
@@ -88,22 +88,28 @@ if __name__ == "__main__":
 		if TELEGRAM_ON:
 			TOKEN = parsed_json["TELEGRAM"]["TOKEN"]
 			CHAT_ID = parsed_json["TELEGRAM"]["CHAT_ID"]
+			MESSAGING_SERVICE += "- messenging: Telegram,\n"
 			tb = telebot.TeleBot(TOKEN)
 		if DISCORD_ON:
 			DISCORD_WEB = parsed_json["DISCORD"]["WEB"]
 			notifier = dn.Notifier(DISCORD_WEB)
+			MESSAGING_SERVICE += "- messenging: Discord,\n"
 		if GOTIFY_ON:
 			GOTIFY_WEB = parsed_json["GOTIFY"]["WEB"]
 			GOTIFY_TOKEN = parsed_json["GOTIFY"]["TOKEN"]
+			MESSAGING_SERVICE += "- messenging: Gotify,\n"
 		if NTFY_ON:
 			NTFY_WEB = parsed_json["NTFY"]["WEB"]
 			NTFY_SUB = parsed_json["NTFY"]["SUB"]
+			MESSAGING_SERVICE += "- messenging: Ntfy,\n"
 		if PUSHBULLET_ON:
 			PUSHBULLET_API = parsed_json["PUSHBULLET"]["API"]
+			MESSAGING_SERVICE += "- messenging: Pushbullet,\n"
 		if SLACK_ON:
 			SLACK_WEB = parsed_json["SLACK"]["WEB"]
+			MESSAGING_SERVICE += "- messenging: Slack,\n"
 		MIN_REPEAT = int(parsed_json["MIN_REPEAT"])
-		send_message(f"*{HOSTNAME}* (hosts)\nhosts monitor:\n{messaging_service()}- polling period: {MIN_REPEAT} minute(s).")
+		send_message(f"*{HOSTNAME}* (hosts)\nhosts monitor:\n{MESSAGING_SERVICE}- polling period: {MIN_REPEAT} minute(s).")
 	else:
 		print("config.json not nound")
 
