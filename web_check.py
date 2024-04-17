@@ -54,22 +54,6 @@ def send_message(message : str):
 			headers={'Access-Token': PUSHBULLET_API, 'Content-Type': 'application/json'})
 		except Exception as e:
 			print(f"error: {e}")
-			
-def messaging_service():
-	messaging = ""
-	if TELEGRAM_ON:
-		messaging += "- messenging: Telegram,\n"
-	if DISCORD_ON:
-		messaging += "- messenging: Discord,\n"
-	if GOTIFY_ON:
-		messaging += "- messenging: Gotify,\n"
-	if NTFY_ON:
-		messaging += "- messenging: Ntfy,\n"
-	if PUSHBULLET_ON:
-		messaging += "- messenging: Pushbullet,\n"
-	if SLACK_ON:
-		messaging += "- messenging: Slack,\n"
-	return messaging
 
 if __name__ == "__main__":	
 	CURRENT_PATH =  os.path.dirname(os.path.realpath(__file__))
