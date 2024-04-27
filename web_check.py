@@ -12,6 +12,14 @@ from schedule import every, repeat, run_pending
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
+def getHostname():
+	hostname = ""
+	if os.path.exists('/proc/sys/kernel/hostname'):
+		with open('/proc/sys/kernel/hostname', "r") as file:
+			hostname = file.read().strip('\n')
+		file.close()
+	return hostname
+
 def send_message(message : str):
 	message = message.replace("\t", "")
 	if TELEGRAM_ON:
@@ -53,7 +61,7 @@ def send_message(message : str):
 
 if __name__ == "__main__":	
 	CURRENT_PATH =  os.path.dirname(os.path.realpath(__file__))
-	HOSTNAME = open('/proc/sys/kernel/hostname', 'r').read().strip('\n')
+	HOSTNAME = getHostname()
 	ssl._create_default_https_context = ssl._create_unverified_context
 	TELEGRAM_ON = DISCORD_ON = GOTIFY_ON = NTFY_ON = SLACK_ON = PUSHBULLET_ON = False
 	TOKEN = CHAT_ID = DISCORD_WEB = GOTIFY_WEB = GOTIFY_TOKEN = NTFY_WEB = NTFY_SUB = PUSHBULLET_API = SLACK_WEB = MESSAGING_SERVICE = ""
