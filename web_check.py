@@ -17,7 +17,6 @@ def getHostname():
 	if os.path.exists('/proc/sys/kernel/hostname'):
 		with open('/proc/sys/kernel/hostname', "r") as file:
 			hostname = file.read().strip('\n')
-		file.close()
 	return hostname
 
 def send_message(message : str):
@@ -114,11 +113,9 @@ def web_check():
 			with open(TMP_FILE, "w") as file:
 				old_status_str = "0" * total_hosts
 				file.write(old_status_str)
-			file.close()
 		with open(TMP_FILE, "r") as file:
 			old_status_str = file.read()
 			li = list(old_status_str)
-		file.close()
 		for i in range(total_hosts):
 			req = Request(web_list[i][0], headers={'User-Agent': 'Mozilla/5.0'})
 			try:
@@ -141,7 +138,6 @@ def web_check():
 		if old_status_str != new_status_str:
 			with open(TMP_FILE, "w") as file:
 				file.write(new_status_str)
-			file.close()
 			send_message(f"*{HOSTNAME}* (hosts)\n{status_message}")
 	else:
 		print("url_list.json not nound")
