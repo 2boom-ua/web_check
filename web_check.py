@@ -101,44 +101,44 @@ if __name__ == "__main__":
 @repeat(every(MIN_REPEAT).minutes)
 def web_check():
 	TMP_FILE = "/tmp/status_web.tmp"
-	web_list = []
+	CURRENT_STATUS = web_list = []
 	count_hosts = 0
 	RED_DOT, GREEN_DOT  = "\U0001F534", "\U0001F7E2"
-	status_message = old_status_str = new_status_str = ""
+	STATUS_MESSAGE = OLD_STATUS = NEW_STATUS = ""
 	if os.path.exists(f"{CURRENT_PATH}/url_list.json"):
 		parsed_json = json.loads(open(f"{CURRENT_PATH}/url_list.json", "r").read())
 		web_list = parsed_json["list"]
 		total_hosts = len(web_list)
 		if not os.path.exists(TMP_FILE) or total_hosts != os.path.getsize(TMP_FILE):
 			with open(TMP_FILE, "w") as file:
-				old_status_str = "0" * total_hosts
-				file.write(old_status_str)
+				OLD_STATUS = "0" * total_hosts
+				file.write(OLD_STATUS)
 		with open(TMP_FILE, "r") as file:
-			old_status_str = file.read()
-			li = list(old_status_str)
+			OLD_STATUS = file.read()
+			CURRENT_STATUS = list(OLD_STATUS)
 		for i in range(total_hosts):
 			req = Request(web_list[i][0], headers={'User-Agent': 'Mozilla/5.0'})
 			try:
 				response = urlopen(req)#timeout
 			except HTTPError as e:
-				li[i] = "1"
-				status_message += f"{RED_DOT} *{web_list[i][1]}*, error: {e.code}\n"
+				CURRENT_STATUS[i] = "1"
+				STATUS_MESSAGE += f"{RED_DOT} *{web_list[i][1]}*, error: {e.code}\n"
 			except URLError as e:
-				li[i] = "1"
-				status_message += f"{RED_DOT} *{web_list[i][1]}*, reason: {e.reason}\n"		
+				CURRENT_STATUS[i] = "1"
+				STATUS_MESSAGE += f"{RED_DOT} *{web_list[i][1]}*, reason: {e.reason}\n"		
 			else:
-				li[i] = "0"
+				CURRENT_STATUS[i] = "0"
 				count_hosts += 1
-		new_status_str = "".join(li)
+		NEW_STATUS = "".join(CURRENT_STATUS)
 		bad_hosts = total_hosts - count_hosts
 		if count_hosts == total_hosts:
-			status_message = f"{GREEN_DOT} monitoring host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}"
+			STATUS_MESSAGE = f"{GREEN_DOT} monitoring host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}"
 		else:
-			status_message = f"monitoring host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}\n{status_message}"
-		if old_status_str != new_status_str:
+			STATUS_MESSAGE = f"monitoring host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}\n{STATUS_MESSAGE}"
+		if OLD_STATUS != NEW_STATUS:
 			with open(TMP_FILE, "w") as file:
-				file.write(new_status_str)
-			send_message(f"*{HOSTNAME}* (hosts)\n{status_message}")
+				file.write(NEW_STATUS)
+			send_message(f"*{HOSTNAME}* (hosts)\n{STATUS_MESSAGE}")
 	else:
 		print("url_list.json not nound")
 	
