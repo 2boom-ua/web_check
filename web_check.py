@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2boom 2023-24
 
+
 import json
 import socket, errno
 import os
@@ -12,12 +13,14 @@ from schedule import every, repeat, run_pending
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
+
 def getHostname():
 	hostname = ""
 	if os.path.exists('/proc/sys/kernel/hostname'):
 		with open('/proc/sys/kernel/hostname', "r") as file:
 			hostname = file.read().strip('\n')
 	return hostname
+
 
 def send_message(message : str):
 	message = message.replace("\t", "")
@@ -58,9 +61,11 @@ def send_message(message : str):
 		except requests.exceptions.RequestException as e:
 			print("error:", e)
 
+
 if __name__ == "__main__":	
 	CURRENT_PATH =  os.path.dirname(os.path.realpath(__file__))
 	HOSTNAME = getHostname()
+	OLD_STATUS = ""
 	ssl._create_default_https_context = ssl._create_unverified_context
 	TELEGRAM_ON = DISCORD_ON = GOTIFY_ON = NTFY_ON = SLACK_ON = PUSHBULLET_ON = False
 	TOKEN = CHAT_ID = DISCORD_WEB = GOTIFY_WEB = GOTIFY_TOKEN = NTFY_WEB = NTFY_SUB = PUSHBULLET_API = SLACK_WEB = MESSAGING_SERVICE = ""
@@ -98,24 +103,21 @@ if __name__ == "__main__":
 	else:
 		print("config.json not nound")
 
+
 @repeat(every(MIN_REPEAT).minutes)
 def web_check():
-	TMP_FILE = "/tmp/status_web.tmp"
 	CURRENT_STATUS = web_list = []
 	count_hosts = 0
 	RED_DOT, GREEN_DOT  = "\U0001F534", "\U0001F7E2"
-	STATUS_MESSAGE = OLD_STATUS = NEW_STATUS = ""
+	STATUS_MESSAGE = NEW_STATUS = ""
+	global OLD_STATUS
 	if os.path.exists(f"{CURRENT_PATH}/url_list.json"):
-		parsed_json = json.loads(open(f"{CURRENT_PATH}/url_list.json", "r").read())
+		with open(f"{CURRENT_PATH}/url_list.json", "r") as file:
+			parsed_json = json.loads(file.read())
 		web_list = parsed_json["list"]
 		total_hosts = len(web_list)
-		if not os.path.exists(TMP_FILE) or total_hosts != os.path.getsize(TMP_FILE):
-			with open(TMP_FILE, "w") as file:
-				OLD_STATUS = "0" * total_hosts
-				file.write(OLD_STATUS)
-		with open(TMP_FILE, "r") as file:
-			OLD_STATUS = file.read()
-			CURRENT_STATUS = list(OLD_STATUS)
+		if len(OLD_STATUS) == 0: OLD_STATUS = "0" * total_hosts
+		CURRENT_STATUS = list(OLD_STATUS)
 		for i in range(total_hosts):
 			req = Request(web_list[i][0], headers={'User-Agent': 'Mozilla/5.0'})
 			try:
@@ -136,12 +138,12 @@ def web_check():
 		else:
 			STATUS_MESSAGE = f"monitoring host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}\n{STATUS_MESSAGE}"
 		if OLD_STATUS != NEW_STATUS:
-			with open(TMP_FILE, "w") as file:
-				file.write(NEW_STATUS)
+			OLD_STATUS = NEW_STATUS
 			send_message(f"*{HOSTNAME}* (hosts)\n{STATUS_MESSAGE}")
 	else:
 		print("url_list.json not nound")
-	
+
+
 while True:
     run_pending()
     time.sleep(1)
