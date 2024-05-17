@@ -12,6 +12,7 @@ import requests
 from schedule import every, repeat, run_pending
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
+from requests.exceptions import RequestException
 
 
 def getHostname():
@@ -135,15 +136,18 @@ def web_check():
 		if len(old_status) == 0: old_status = "0" * total_hosts
 		current_status = list(old_status)
 		for i in range(total_hosts):
-			req = Request(web_list[i][0], headers={'User-Agent': 'Mozilla/5.0'})
+			#req = Request(web_list[i][0], headers={'User-Agent': 'Mozilla/5.0'})
+			req = Request(web_list[i][0], headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0'})
 			try:
 				response = urlopen(req)#timeout
 			except HTTPError as e:
 				current_status[i] = "1"
-				status_message += f"{red_dot} *{web_list[i][1]}*, error: {e.code}\n"
+				#status_message += f"{red_dot} *{web_list[i][1]}*, error: {e.code}\n"
+				status_message += f"{red_dot} *{web_list[i][1]}:* {e.code}\n"
 			except URLError as e:
 				current_status[i] = "1"
-				status_message += f"{red_dot} *{web_list[i][1]}*, reason: {e.reason}\n"		
+				#status_message += f"{red_dot} *{web_list[i][1]}*, reason: {e.reason}\n"
+				status_message += f"{red_dot} *{web_list[i][1]}:* {e.reason}\n"				
 			else:
 				current_status[i] = "0"
 				count_hosts += 1
