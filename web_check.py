@@ -133,9 +133,8 @@ def web_check():
 			web_list = parsed_json["list"]
 			url_list_date = current_url_list_date
 		total_hosts = len(web_list)
-		if len(old_status) == 0 or total_hosts != len(old_status): old_status = "0" * total_hosts
+		if not old_status or total_hosts != len(old_status): old_status = "0" * total_hosts
 		current_status = list(old_status)
-		#for i in range(total_hosts):
 		for i, weblist in enumerate(web_list):
 			req = Request(weblist[0], headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0'})
 			try:
