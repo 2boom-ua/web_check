@@ -143,7 +143,10 @@ def web_check():
 				message += f"{red_dot} *{weblist[1]}:* {e.code}\n"
 			except URLError as e:
 				current_status[i] = "1"
-				message += f"{red_dot} *{weblist[1]}:* {e.reason}\n"				
+				message += f"{red_dot} *{weblist[1]}:* {e.reason}\n"
+			except Exception as e:
+				current_status[i] = "1"
+				message += f"{red_dot} *{weblist[1]}:* {e}\n"
 			else:
 				current_status[i] = "0"
 				count_hosts += 1
