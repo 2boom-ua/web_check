@@ -1,5 +1,5 @@
 # web_check
-web check informer for Telegram, Discord, Gotify, Ntfy, Pushbullet, Slack as linux service
+web check informer for Telegram, Discord, Gotify, Ntfy, Pushbullet, Pushover, Slack as linux service
 
 ```
 pip install -r requirements.txt
