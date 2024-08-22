@@ -84,8 +84,8 @@ if __name__ == "__main__":
 	ssl._create_default_https_context = ssl._create_unverified_context
 	config_files = False
 	monitoring_mg = ""
-	dots = {"orange": "\U0001F7E0", "green": "\U0001F7E2"}
-	square_dot = {"orange": "\U0001F7E7", "green": "\U0001F7E9"}
+	dots = {"green": "\U0001F7E2", "red": "\U0001F534"}
+	square_dot = {"green": "\U0001F7E9", "red": "\U0001F7E5"}
 	if os.path.exists(f"{current_path}/config.json") and os.path.exists(f"{current_path}/url_list.json"):
 		config_files = True
 		with open(f"{current_path}/url_list.json", "r") as file:
@@ -98,7 +98,7 @@ if __name__ == "__main__":
 		default_dot_style = parsed_json["DEFAULT_DOT_STYLE"]
 		if not default_dot_style:
 			dots = square_dot
-		orange_dot, green_dot = dots["orange"], dots["green"]
+		green_dot, red_dot = dots["green"], dots["red"]
 		telegram_on, discord_on, gotify_on, ntfy_on, pushbullet_on, pushover_on, slack_on = (parsed_json[key]["ON"] for key in ["TELEGRAM", "DISCORD", "GOTIFY", "NTFY", "PUSHBULLET", "PUSHOVER", "SLACK"])
 		services = {
 		"TELEGRAM": ["TOKENS", "CHAT_IDS"], "DISCORD": ["TOKENS"], "SLACK": ["TOKENS"],
