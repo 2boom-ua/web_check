@@ -14,7 +14,8 @@ from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
 
-def getHostname():
+def get_hostname():
+	"""Get system hostname"""
 	hostname = ""
 	hostname_path = '/proc/sys/kernel/hostname'
 	if os.path.exists(hostname_path):
@@ -23,11 +24,13 @@ def getHostname():
 	return hostname
 	
 def get_modification_time(file_path):
+	"""Get file modification time"""
 	modification_time = os.path.getmtime(file_path)
 	return datetime.datetime.fromtimestamp(modification_time)
 
 
 def send_message(message: str):
+	"""Send notifications to various messaging services (Telegram, Discord, Slack, Gotify, Ntfy, Pushbullet, Pushover)."""
 	def send_request(url, json_data=None, data=None, headers=None):
 		try:
 			response = requests.post(url, json=json_data, data=data, headers=headers)
@@ -75,9 +78,10 @@ def send_message(message: str):
 			send_request(url, json_data)
 
 
-if __name__ == "__main__":	
+if __name__ == "__main__":
+	"""Load configuration and initialize monitoring"""
 	current_path =  os.path.dirname(os.path.realpath(__file__))
-	hostname = getHostname()
+	hostname = get_hostname()
 	header = f"*{hostname}* (hosts)\n"
 	old_status = ""
 	web_list = []
@@ -92,7 +96,6 @@ if __name__ == "__main__":
 			parsed_json = json.loads(file.read())
 		url_list_date = get_modification_time(f"{current_path}/url_list.json")
 		web_list = parsed_json["list"]
-	if os.path.exists(f"{current_path}/config.json"):
 		with open(f"{current_path}/config.json", "r") as file:
 			parsed_json = json.loads(file.read())
 		default_dot_style = parsed_json["DEFAULT_DOT_STYLE"]
@@ -116,6 +119,7 @@ if __name__ == "__main__":
 
 @repeat(every(min_repeat).minutes)
 def web_check():
+	"""Periodically check webhosts"""
 	current_status = []
 	count_hosts = 0
 	message = new_status = ""
@@ -133,7 +137,7 @@ def web_check():
 		if not old_status or total_hosts != len(old_status): old_status = "0" * total_hosts
 		current_status = list(old_status)
 		for i, weblist in enumerate(web_list):
-			req = Request(weblist[0], headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0'})
+			req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0'})
 			try:
 				response = urlopen(req)#timeout
 			except HTTPError as e:
