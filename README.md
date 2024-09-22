@@ -1,11 +1,42 @@
-# web_check
-web check informer for Telegram, Discord, Gotify, Ntfy, Pushbullet, Pushover, Slack, Matrix as linux service
+# Web Host Monitoring Script
+
+## Overview
+
+This Python script monitors the availability of specified web hosts. It checks the status of URLs and sends notifications through various messaging services if any host is unreachable or returns an error.
+
+## Features
+
+- **Web Host Monitoring:** Regularly checks if specified URLs are accessible.
+- **Notifications:** Sends alerts via:
+  - Telegram
+  - Discord
+  - Slack
+  - Gotify
+  - Ntfy
+  - Pushbullet
+  - Pushover
+  - Matrix
+- **Dynamic Configuration:** Load URLs and settings from JSON files.
+- **Polling Period:** Adjustable interval for checking host availability.
+## Requirements
+
+- Python 3.x
+- Docker installed and running
+- Dependencies: `requests`, `schedule`
+
+### Clone the repository:
+```
+git clone https://github.com/2boom-ua/web_check.git
+cd web_check
+```
+### Install required Python packages:
 
 ```
 pip install -r requirements.txt
 ```
 
-**config.json**
+### Edit config.json:
+A **config.json** file in the same directory as the script, and include your API tokens and configuration settings.
 ```
 {
     "TELEGRAM": {
@@ -106,7 +137,10 @@ pip install -r requirements.txt
     "MIN_REPEAT": 1
 }
 ```
-**make as service**
+## Running as a Linux Service
+You can set this script to run as a Linux service for continuous monitoring.
+
+Create a systemd service file:
 ```
 nano /etc/systemd/system/web_check.service
 ```
@@ -129,6 +163,13 @@ systemctl daemon-reload
 ```
 systemctl enable web_check.service
 ```
-```
+## License
+
+This project is licensed under the MIT License - see the [MIT License](https://opensource.org/licenses/MIT) for details.
+
+## Author
+
+- **2boom** - [GitHub](https://github.com/2boom-ua)
+
 systemctl start web_check.service
 ```
