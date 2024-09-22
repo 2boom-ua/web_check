@@ -1,10 +1,10 @@
-# Web Host Monitoring Script
+## Web Host Monitoring Script
 
-## Overview
+### Overview
 
 This Python script monitors the availability of specified web hosts. It checks the status of URLs and sends notifications through various messaging services if any host is unreachable or returns an error.
 
-## Features
+### Features
 
 - **Web Host Monitoring:** Regularly checks if specified URLs are accessible.
 - **Notifications:** Sends alerts via:
@@ -18,7 +18,7 @@ This Python script monitors the availability of specified web hosts. It checks t
   - Matrix
 - **Dynamic Configuration:** Load URLs and settings from JSON files.
 - **Polling Period:** Adjustable interval for checking host availability.
-## Requirements
+### Requirements
 
 - Python 3.x
 - Docker installed and running
