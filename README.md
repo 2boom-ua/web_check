@@ -7,7 +7,7 @@ This Python script monitors the availability of specified web hosts. It checks t
 ### Features
 
 - **Web Host Monitoring:** Regularly checks if specified URLs are accessible.
-- **Notifications:** Sends alerts via:
+- **Real-time notifications with support for multiple accounts** via:
   - Telegram
   - Discord
   - Slack
