@@ -16,6 +16,7 @@ This Python script monitors the availability of specified web hosts. It checks t
   - Pushbullet
   - Pushover
   - Matrix
+  - Mattermost
 - **Dynamic Configuration:** Load URLs and settings from JSON files.
 - **Polling Period:** Adjustable interval for checking host availability.
 ### Requirements
@@ -130,6 +131,14 @@ A **config.json** file in the same directory as the script, and include your API
         "ROOM_IDS": [
             "!first room_id",
             "!second room_id",
+            "...."
+        ]
+    },
+    "MATTERMOST": {
+        "ON": false,
+        "CHAT_URLS": [
+            "first server_url",
+            "second server_url",
             "...."
         ]
     },
