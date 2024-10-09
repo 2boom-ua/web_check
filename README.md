@@ -210,7 +210,7 @@ A **config.json** file in the same directory as the script, and include your API
 ```
 | Item   | Required   | Description   |
 |------------|------------|------------|
-| STD_BOLDS | true/false | "**" **standard Markdown**, "*" *non-standard Markdown*
+| STD_BOLDS | true/false | "**" **standard Markdown**, "*" *non-standard Markdown* |
 | | | Standard Markdown use - Pumble, Mattermost, Discord, Ntfy, Gotify |
 | | | Non-standard Markdown use - Telegram, Zulip, Flock, Slack, RocketChat, Flock. |
 | DEFAULT_DOT_STYLE | true/false | Round/Square dots. |
