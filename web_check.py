@@ -14,7 +14,7 @@ from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
 
-def getHostName():
+def getHostName() -> str:
 	"""Get system hostname"""
 	hostname = ""
 	hostname_path = '/proc/sys/kernel/hostname'
@@ -24,7 +24,7 @@ def getHostName():
 	return hostname
 	
 def GetModificationTime(file_path):
-	"""Get file modification time"""
+	"""Returns the modification time of a file as a datetime object."""
 	modification_time = os.path.getmtime(file_path)
 	return datetime.datetime.fromtimestamp(modification_time)
 
