@@ -23,6 +23,7 @@ This Python script monitors the availability of specified web hosts. It checks t
   - Pumble
   - Flock
   - Zulip
+  - Apprise
   - Custom webhook
 - **Dynamic Configuration:** Load URLs and settings from JSON files.
 - **Polling Period:** Adjustable interval for checking host availability.
@@ -48,7 +49,7 @@ A **config.json** file in the same directory as the script, and include your API
 ```
 {
     "TELEGRAM": {
-        "ON": false,
+        "ENABLED": false,
         "TOKENS": [
             "first tocken",
             "second tocken",
@@ -61,7 +62,7 @@ A **config.json** file in the same directory as the script, and include your API
         ]
     },
     "DISCORD": {
-        "ON": false,
+        "ENABLED": false,
         "WEBHOOK_URLS": [
             "first url",
             "second url",
@@ -69,7 +70,7 @@ A **config.json** file in the same directory as the script, and include your API
         ]
     },
     "SLACK": {
-        "ON": false,
+        "ENABLED": false,
         "WEBHOOK_URLS": [
             "first url",
             "second url",
@@ -77,7 +78,7 @@ A **config.json** file in the same directory as the script, and include your API
         ]
     },
     "GOTIFY": {
-        "ON": false,
+        "ENABLED": false,
         "TOKENS": [
             "first tocken",
             "second tocken",
@@ -90,7 +91,7 @@ A **config.json** file in the same directory as the script, and include your API
         ]
     },
     "NTFY": {
-        "ON": false,
+        "ENABLED": false,
         "WEBHOOK_URLS": [
             "first url",
             "second url",
@@ -98,7 +99,7 @@ A **config.json** file in the same directory as the script, and include your API
 		]
     },
     "PUSHBULLET": {
-        "ON": false,
+        "ENABLED": false,
         "TOKENS": [
             "first tocken",
             "second tocken",
@@ -106,7 +107,7 @@ A **config.json** file in the same directory as the script, and include your API
         ]
     },
     "PUSHOVER": {
-        "ON": false,
+        "ENABLED": false,
         "TOKENS": [
             "first tocken",
             "second tocken",
@@ -119,7 +120,7 @@ A **config.json** file in the same directory as the script, and include your API
         ]
     },
     "MATRIX": {
-        "ON": false,
+        "ENABLED": false,
         "TOKENS": [
             "first tocken",
             "second tocken",
@@ -137,7 +138,7 @@ A **config.json** file in the same directory as the script, and include your API
         ]
     },
     "MATTERMOST": {
-        "ON": false,
+        "ENABLED": false,
         "WEBHOOK_URLS": [
             "first url",
             "second url",
@@ -145,7 +146,7 @@ A **config.json** file in the same directory as the script, and include your API
         ]
     },
     "ROCKET": {
-        "ON": false,
+        "ENABLED": false,
         "TOKENS": [
             "first tocken",
             "second tocken",
@@ -168,7 +169,7 @@ A **config.json** file in the same directory as the script, and include your API
         ]
     },
     "FLOCK": {
-        "ON": false,
+        "ENABLED": false,
         "WEBHOOK_URLS": [
             "first url",
             "second url",
@@ -176,7 +177,7 @@ A **config.json** file in the same directory as the script, and include your API
 		]
     },
     "PUMBLE": {
-        "ON": false,
+        "ENABLED": false,
         "WEBHOOK_URLS": [
             "first url",
             "second url",
@@ -184,7 +185,15 @@ A **config.json** file in the same directory as the script, and include your API
 		]
     },
     "ZULIP": {
-        "ON": false,
+        "ENABLED": false,
+        "WEBHOOK_URLS": [
+            "first url",
+            "second url",
+            "...."
+		]
+    },
+    "APPRISE": {
+        "ENABLED": false,
         "WEBHOOK_URLS": [
             "first url",
             "second url",
@@ -192,7 +201,7 @@ A **config.json** file in the same directory as the script, and include your API
 		]
     },
     "CUSTOM": {
-        "ON": false,
+        "ENABLED": false,
         "WEBHOOK_URLS": [
             "first url",
             "second url",
