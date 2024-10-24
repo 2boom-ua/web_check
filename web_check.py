@@ -242,7 +242,7 @@ def WebCheck():
 		if count_hosts == total_hosts:
 			message = f"{green_dot} monitoring host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}"
 		else:
-			message = f"monitoring host(s):\n|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}\n{message}"
+			message = f"monitoring host(s):\n{message}|ALL| - {total_hosts}, |OK| - {count_hosts}, |BAD| - {bad_hosts}"
 		if old_status != new_status:
 			old_status = new_status
 			SendMessage(f"{header}{message}")
