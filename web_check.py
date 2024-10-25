@@ -224,19 +224,13 @@ def WebCheck():
 		for i, weblist in enumerate(web_list):
 			req = Request(weblist[0], headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0'})
 			try:
-				response = urlopen(req)#timeout
-			except HTTPError as e:
-				current_status[i] = "1"
-				message += f"{red_dot} *{weblist[1]}:* {e.code}\n"
-			except URLError as e:
-				current_status[i] = "1"
-				message += f"{red_dot} *{weblist[1]}:* {e.reason}\n"
-			except Exception as e:
-				current_status[i] = "1"
-				message += f"{red_dot} *{weblist[1]}:* {e}\n"
-			else:
+				response = urlopen(req)  # timeout
 				current_status[i] = "0"
 				count_hosts += 1
+			except (HTTPError, URLError, Exception) as e:
+				current_status[i] = "1"
+				reason = e.code if isinstance(e, HTTPError) else e.reason if isinstance(e, URLError) else str(e)
+				message += f"{red_dot} *{weblist[1]}:* {reason}\n"
 		new_status = "".join(current_status)
 		bad_hosts = total_hosts - count_hosts
 		if count_hosts == total_hosts:
