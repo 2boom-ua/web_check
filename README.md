@@ -3,6 +3,9 @@
     <img src="https://github.com/2boom-ua/web_check/blob/main/web_check.jpg?raw=true" alt="" width="260" height="177">
 </div>
 
+
+*The idea for this software was inspired by* [louislam/uptime-kuma](https://github.com/louislam/uptime-kuma)
+
 ### Overview
 
 This Python script monitors the availability of specified web hosts. It checks the status of URLs and sends notifications through various messaging services if any host is unreachable or returns an error.
