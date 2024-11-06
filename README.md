@@ -51,10 +51,9 @@ pip install -r requirements.txt
 ```
 {
 	"list": [
-		["url-1", "Name-1"],
-		["url-2", "Name-2"],
-		["url-3", "Name-3"],
-		....
+		["http://url", "name_of_url"],
+		["http://url", "name_of_url"],
+		["http://url", "name_of_url"]
 	]
 }
 ```
