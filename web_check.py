@@ -121,7 +121,11 @@ if __name__ == "__main__":
 			f"- default dot style: {default_dot_style},\n"
 			f"- polling period: {min_repeat} minute(s)."
 		)
-		SendMessage(f"{header}hosts monitor:\n{monitoring_message}")
+		if all(value in globals() for value in ["platform_webhook_url", "platform_header", "platform_pyload", "platform_format_message"]):
+			SendMessage(f"{header}hosts monitor:\n{monitoring_message}")
+		else:
+			print("config.json is wrong")
+			exit(1)
 	else:
 		print("url_list.json or/and config.json not nound")
 
