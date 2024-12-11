@@ -28,6 +28,7 @@ This Python script monitors the availability of specified web hosts. It checks t
   - Flock
   - Zulip
   - Apprise
+  - Webntfy
   - Custom webhook
 - **Dynamic Configuration:** Load URLs and settings from JSON files.
 - **Polling Period:** Adjustable interval for checking host availability.
