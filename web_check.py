@@ -78,7 +78,8 @@ def SendMessage(message: str):
 
 if __name__ == "__main__":
     """Load configuration and initialize monitoring"""
-    current_path =  os.path.dirname(os.path.realpath(__file__))
+    config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
+    url_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "url_list.json")
     hostname = getHostName()
     header = f"*{hostname}* (hosts)\n"
     old_status = ""
@@ -88,13 +89,13 @@ if __name__ == "__main__":
     monitoring_message = ""
     dots = {"green": "\U0001F7E2", "red": "\U0001F534"}
     square_dot = {"green": "\U0001F7E9", "red": "\U0001F7E5"}
-    if os.path.exists(f"{current_path}/config.json") and os.path.exists(f"{current_path}/url_list.json"):
+    if os.path.exists(config_file) and os.path.exists(url_file):
         config_files = True
-        with open(f"{current_path}/url_list.json", "r") as file:
+        with open(url_file, "r") as file:
             config_json = json.loads(file.read())
-        url_list_date = GetModificationTime(f"{current_path}/url_list.json")
+        url_list_date = GetModificationTime(url_file)
         web_list = config_json["list"]
-        with open(f"{current_path}/config.json", "r") as file:
+        with open(config_file, "r") as file:
             config_json = json.loads(file.read())
         try:
             default_dot_style = config_json.get("DEFAULT_DOT_STYLE", True)
@@ -142,9 +143,9 @@ def WebCheck():
     global web_list
     global url_list_date
     if config_files:
-        current_url_list_date = GetModificationTime(f"{current_path}/url_list.json")
+        current_url_list_date = GetModificationTime(url_file)
         if url_list_date != current_url_list_date:
-            with open(f"{current_path}/url_list.json", "r") as file:
+            with open(url_file, "r") as file:
                 config_json = json.loads(file.read())
             web_list = config_json["list"]
             url_list_date = current_url_list_date
