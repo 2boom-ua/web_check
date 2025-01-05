@@ -104,12 +104,14 @@ You can use any name and any number of records for each messaging platform confi
 - **html** - a web-based format using tags for advanced text styling,
 - **text** - raw text without any styling or formatting.
 ```
- "DEFAULT_DOT_STYLE": true,
-    "MIN_REPEAT": 1
+"REQUEST_TIMEOUT": 10,
+"DEFAULT_DOT_STYLE": true,
+"MIN_REPEAT": 1
 ```
 
 | Item   | Required   | Description   |
 |------------|------------|------------|
+| REQUEST_TIMEOUT | 10 | Request timeout in seconds. Default is 10 sec.|
 | DEFAULT_DOT_STYLE | true/false | Round/Square dots. |
 | MIN_REPEAT | 1 | Set the poll period in minutes. Minimum is 1 minute. | 
 
