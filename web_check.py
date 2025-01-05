@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-#Copyright (c) 2024 2boom.
+#Copyright (c) 2024-25 2boom.
 
 import json
-import socket, errno
 import os
 import sys
 import ssl
@@ -98,15 +97,17 @@ if __name__ == "__main__":
         with open(config_file, "r") as file:
             config_json = json.loads(file.read())
         try:
+            request_timeout = max(int(config_json.get("REQUEST_TIMEOUT", 10)), 10)
             default_dot_style = config_json.get("DEFAULT_DOT_STYLE", True)
             min_repeat = max(int(config_json.get("MIN_REPEAT", 1)), 1)
         except (json.JSONDecodeError, ValueError, TypeError, KeyError):
+            request_timeout = 10
             default_dot_style = True
             min_repeat = 1
         if not default_dot_style:
             dots = square_dot
         green_dot, red_dot = dots["green"], dots["red"]
-        no_messaging_keys = ["DEFAULT_DOT_STYLE", "MIN_REPEAT"]
+        no_messaging_keys = ["REQUEST_TIMEOUT","DEFAULT_DOT_STYLE", "MIN_REPEAT"]
         messaging_platforms = list(set(config_json) - set(no_messaging_keys))
         for platform in messaging_platforms:
             if config_json[platform].get("ENABLED", False):
@@ -153,11 +154,20 @@ def WebCheck():
         if not old_status or total_hosts != len(old_status): old_status = "0" * total_hosts
         current_status = list(old_status)
         for i, weblist in enumerate(web_list):
-            req = Request(weblist[0], headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0'})
+            req = Request(
+                weblist[0],
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0'}
+                )
             try:
-                response = urlopen(req)  # timeout
-                current_status[i] = "0"
-                count_hosts += 1
+                with urlopen(req, timeout=request_timeout) as response:
+                    if response.status == 200:
+                        current_status[i] = "0"
+                        count_hosts += 1
+                    else:
+                        current_status[i] = "1"
+                        count_hosts += 1
+                        message += f"{red_dot} *{weblist[1]}:* HTTP {response.status}\n"
             except (HTTPError, URLError, Exception) as e:
                 current_status[i] = "1"
                 reason = e.code if isinstance(e, HTTPError) else e.reason if isinstance(e, URLError) else str(e)
