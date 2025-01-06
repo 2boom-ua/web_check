@@ -122,6 +122,7 @@ if __name__ == "__main__":
         monitoring_message = "\n".join([*sorted(monitoring_message.splitlines()), ""])
         monitoring_message += (
             f"- default dot style: {default_dot_style},\n"
+            f"- request timeout: {request_timeout} second(s),\n"
             f"- polling period: {min_repeat} minute(s)."
         )
         if all(value in globals() for value in ["platform_webhook_url", "platform_header", "platform_pyload", "platform_format_message"]):
@@ -161,12 +162,9 @@ def WebCheck():
                 )
             try:
                 with urlopen(req, timeout=request_timeout) as response:
-                    if response.status == 200:
-                        current_status[i] = "0"
-                        count_hosts += 1
-                    else:
-                        current_status[i] = "1"
-                        count_hosts += 1
+                    current_status[i] = "0" if response.status == 200 else "1"
+                    count_hosts += 1
+                    if response.status != 200:
                         message += f"{red_dot} *{weblist[1]}:* HTTP {response.status}\n"
             except (HTTPError, URLError, Exception) as e:
                 current_status[i] = "1"
