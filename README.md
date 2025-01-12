@@ -104,6 +104,7 @@ You can use any name and any number of records for each messaging platform confi
 - **html** - a web-based format using tags for advanced text styling,
 - **text** - raw text without any styling or formatting.
 ```
+"HOST_NAME": "MyHostName",
 "REQUEST_TIMEOUT": 10,
 "DEFAULT_DOT_STYLE": true,
 "MIN_REPEAT": 1
@@ -111,12 +112,47 @@ You can use any name and any number of records for each messaging platform confi
 
 | Item   | Required   | Description   |
 |------------|------------|------------|
+| "HOST_NAME" | string | Host or config name.|
 | REQUEST_TIMEOUT | 10 | Request timeout in seconds. Default is 10 sec.|
 | DEFAULT_DOT_STYLE | true/false | Round/Square dots. |
 | MIN_REPEAT | 1 | Set the poll period in minutes. Minimum is 1 minute. | 
 
 
-### Running as a Linux Service
+## Docker
+### docker-cli
+```bash
+docker build -t web_check:latest .
+```
+```bash
+docker run -d \
+  --name web_check \
+  -v $(pwd)/config.json:/web_check/config.json \
+  -v $(pwd)/url_list.json:/web_check/url_list.json \
+  --restart always \
+  web_check:latest
+```
+### docker-compose
+```
+version: "3.8"
+services:
+  web_check:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web_check
+    image: web_check:latest
+    volumes:
+      - ./config.json:/web_check/config.json
+      - ./url_list.json:/web_check/url_list.json
+    restart: always
+```
+
+```bash
+docker-compose up -d
+```
+---
+
+## Running as a Linux Service
 You can set this script to run as a Linux service for continuous monitoring.
 
 Create a systemd service file:
