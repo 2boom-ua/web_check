@@ -79,8 +79,6 @@ if __name__ == "__main__":
     """Load configuration and initialize monitoring"""
     config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
     url_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "url_list.json")
-    #hostname = getHostName()
-    #header = f"*{hostname}* (hosts)\n"
     old_status = ""
     web_list = []
     ssl._create_default_https_context = ssl._create_unverified_context
