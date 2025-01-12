@@ -79,8 +79,8 @@ if __name__ == "__main__":
     """Load configuration and initialize monitoring"""
     config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
     url_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "url_list.json")
-    hostname = getHostName()
-    header = f"*{hostname}* (hosts)\n"
+    #hostname = getHostName()
+    #header = f"*{hostname}* (hosts)\n"
     old_status = ""
     web_list = []
     ssl._create_default_https_context = ssl._create_unverified_context
@@ -97,6 +97,7 @@ if __name__ == "__main__":
         with open(config_file, "r") as file:
             config_json = json.loads(file.read())
         try:
+            hostname = config_json.get("HOST_NAME", "")
             request_timeout = max(int(config_json.get("REQUEST_TIMEOUT", 10)), 10)
             default_dot_style = config_json.get("DEFAULT_DOT_STYLE", True)
             min_repeat = max(int(config_json.get("MIN_REPEAT", 1)), 1)
@@ -104,10 +105,12 @@ if __name__ == "__main__":
             request_timeout = 10
             default_dot_style = True
             min_repeat = 1
+            hostname = getHostName()
+        header = f"*{hostname}* (hosts)\n"
         if not default_dot_style:
             dots = square_dot
         green_dot, red_dot = dots["green"], dots["red"]
-        no_messaging_keys = ["REQUEST_TIMEOUT","DEFAULT_DOT_STYLE", "MIN_REPEAT"]
+        no_messaging_keys = ["HOST_NAME", "REQUEST_TIMEOUT","DEFAULT_DOT_STYLE", "MIN_REPEAT"]
         messaging_platforms = list(set(config_json) - set(no_messaging_keys))
         for platform in messaging_platforms:
             if config_json[platform].get("ENABLED", False):
@@ -158,7 +161,8 @@ def WebCheck():
             req = Request(
                 weblist[0],
                 headers={
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0'}
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:118.0) Gecko/20100101 Firefox/118.0'
+                    }
                 )
             try:
                 with urlopen(req, timeout=request_timeout) as response:

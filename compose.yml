@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  web_check:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web_check
+    image: web_check:latest
+    volumes:
+      - ./config.json:/web_check/config.json
+      - ./url_list.json:/web_check/url_list.json
+    restart: always
