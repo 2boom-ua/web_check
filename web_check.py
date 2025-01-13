@@ -104,6 +104,8 @@ if __name__ == "__main__":
             default_dot_style = True
             min_repeat = 1
             hostname = getHostName()
+        if not hostname:
+            hostname = getHostName()
         header = f"*{hostname}* (hosts)\n"
         if not default_dot_style:
             dots = square_dot
