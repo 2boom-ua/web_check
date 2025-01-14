@@ -103,7 +103,6 @@ if __name__ == "__main__":
             request_timeout = 10
             default_dot_style = True
             min_repeat = 1
-            hostname = getHostName()
         if not hostname:
             hostname = getHostName()
         header = f"*{hostname}* (hosts)\n"
