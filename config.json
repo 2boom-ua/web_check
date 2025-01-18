@@ -23,6 +23,7 @@
         ]
     },
     "HOST_NAME": "MyHostName",
+    "STARTUP_MESSAGE": true,
     "REQUEST_TIMEOUT": 10,
     "DEFAULT_DOT_STYLE": true,
     "MIN_REPEAT": 1
