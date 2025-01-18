@@ -9,9 +9,25 @@ import ssl
 import time
 import datetime
 import requests
+import logging
 from schedule import every, repeat, run_pending
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
+from urllib.parse import urlparse
+
+
+"""Configure logging"""
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger("web_check")
+
+
+"""Get base url"""
+def GetBaseUrl(url):
+    parsed_url = urlparse(url)
+    return f"{parsed_url.scheme}://{parsed_url.netloc}...."
 
 
 def getHostName() -> str:
@@ -35,8 +51,9 @@ def SendMessage(message: str):
         try:
             response = requests.post(url, json=json_data, data=data, headers=headers)
             response.raise_for_status()
+            logger.info(f"Message successfully sent to {GetBaseUrl(url)}. Status code: {response.status_code}")
         except requests.exceptions.RequestException as e:
-            print(f"Error sending message: {e}")
+            logger.error(f"Error sending message to {GetBaseUrl(url)}: {e}")
     
     """"Converts Markdown-like syntax to HTML format."""
     def toHTMLFormat(message: str) -> str:
@@ -51,7 +68,11 @@ def SendMessage(message: str):
             return message.replace("*", "**")
         elif m_format == "text":
             return message.replace("*", "")
-        return message
+        elif m_format == "simplified":
+            return message
+        else:
+            logger.error(f"Unknown format '{m_format}' provided. Returning original message.")
+            return message
 
     """Iterate through multiple platform configurations"""
     for url, header, pyload, format_message in zip(platform_webhook_url, platform_header, platform_pyload, platform_format_message):
@@ -96,20 +117,22 @@ if __name__ == "__main__":
             config_json = json.loads(file.read())
         try:
             hostname = config_json.get("HOST_NAME", "")
+            startup_message = config_json.get("STARTUP_MESSAGE", True)
             request_timeout = max(int(config_json.get("REQUEST_TIMEOUT", 10)), 10)
             default_dot_style = config_json.get("DEFAULT_DOT_STYLE", True)
             min_repeat = max(int(config_json.get("MIN_REPEAT", 1)), 1)
         except (json.JSONDecodeError, ValueError, TypeError, KeyError):
             request_timeout = 10
-            default_dot_style = True
+            default_dot_style = startup_message = True
             min_repeat = 1
+            logger.error("Error or incorrect settings in config.json. Default settings will be used.")
         if not hostname:
             hostname = getHostName()
         header = f"*{hostname}* (hosts)\n"
         if not default_dot_style:
             dots = square_dot
         green_dot, red_dot = dots["green"], dots["red"]
-        no_messaging_keys = ["HOST_NAME", "REQUEST_TIMEOUT","DEFAULT_DOT_STYLE", "MIN_REPEAT"]
+        no_messaging_keys = ["HOST_NAME", "STARTUP_MESSAGE", "REQUEST_TIMEOUT","DEFAULT_DOT_STYLE", "MIN_REPEAT"]
         messaging_platforms = list(set(config_json) - set(no_messaging_keys))
         for platform in messaging_platforms:
             if config_json[platform].get("ENABLED", False):
@@ -128,12 +151,14 @@ if __name__ == "__main__":
             f"- polling period: {min_repeat} minute(s)."
         )
         if all(value in globals() for value in ["platform_webhook_url", "platform_header", "platform_pyload", "platform_format_message"]):
-            SendMessage(f"{header}hosts monitor:\n{monitoring_message}")
+            logger.info(f"Started!")
+            if startup_message:
+                SendMessage(f"{header}hosts monitor:\n{monitoring_message}")
         else:
-            print("config.json is wrong")
+            logger.error("config.json is wrong")
             sys.exit(1)
     else:
-        print("url_list.json or/and config.json not nound")
+        logger.error("config.json not found")
         sys.exit(1)
 
 
@@ -183,7 +208,8 @@ def WebCheck():
             old_status = new_status
             SendMessage(f"{header}{message}")
     else:
-        print("url_list.json or/and config.json not nound")
+        logger.error("url_list.json or/and config.json not nound")
+
 
 while True:
     run_pending()
