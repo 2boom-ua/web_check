@@ -9,6 +9,8 @@ services:
     volumes:
       - ./config.json:/web_check/config.json
       - ./url_list.json:/web_check/url_list.json
+    environment:
+      - TZ=UTC
     restart: always
     healthcheck:
       test: ["CMD", "pgrep", "-fl", "web_check"]
