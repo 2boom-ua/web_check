@@ -10,3 +10,9 @@ services:
       - ./config.json:/web_check/config.json
       - ./url_list.json:/web_check/url_list.json
     restart: always
+    healthcheck:
+      test: ["CMD", "pgrep", "-fl", "web_check"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
