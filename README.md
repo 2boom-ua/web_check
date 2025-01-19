@@ -149,12 +149,6 @@ services:
     environment:
       - TZ=UTC
     restart: always
-    healthcheck:
-      test: ["CMD", "pgrep", "-fl", "web_check"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
 ```
 
 ```bash
