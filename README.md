@@ -123,26 +123,15 @@ You can use any name and any number of records for each messaging platform confi
 ## Docker
 ### docker-cli
 ```bash
-docker build -t web_check:latest .
-```
-```bash
-docker run -d \
-  --name web_check \
-  -v $(pwd)/config.json:/web_check/config.json \
-  -v $(pwd)/url_list.json:/web_check/url_list.json \
-  --restart always \
-  web_check:latest
+docker run -v ./config.json:/web_check/config.json -v ./url_list.json:/web_check/url_list.json --name web_check -e TZ=UTC ghcr.io/2boom-ua/web_check:latest 
 ```
 ### docker-compose
 ```
 version: "3.8"
 services:
   web_check:
-    build:
-      context: .
-      dockerfile: Dockerfile
     container_name: web_check
-    image: web_check:latest
+    image: ghcr.io/2boom-ua/web_check:latest
     volumes:
       - ./config.json:/web_check/config.json
       - ./url_list.json:/web_check/url_list.json
