@@ -10,5 +10,5 @@ services:
       - ./config.json:/web_check/config.json
       - ./url_list.json:/web_check/url_list.json
     environment:
-      - TZ=Europe/Kyiv
+      - TZ=UTC
     restart: always
