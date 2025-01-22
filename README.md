@@ -38,16 +38,6 @@ This Python script monitors the availability of specified web hosts. It checks t
 - Docker installed and running
 - Dependencies: `requests`, `schedule`
 
-### Clone the repository:
-```
-git clone https://github.com/2boom-ua/web_check.git
-cd web_check
-```
-### Install required Python packages:
-
-```
-pip install -r requirements.txt
-```
 ### Edit url_list.json:
 ```
 {
@@ -119,6 +109,15 @@ You can use any name and any number of records for each messaging platform confi
 | DEFAULT_DOT_STYLE | true/false | Round/Square dots. |
 | MIN_REPEAT | 1 | Set the poll period in minutes. Minimum is 1 minute. | 
 
+### Clone the repository:
+```
+git clone https://github.com/2boom-ua/web_check.git
+cd web_check
+```
+### Install required Python packages:
+```
+pip install -r requirements.txt
+```
 
 ## Docker
 ```bash
