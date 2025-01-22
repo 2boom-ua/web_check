@@ -121,6 +121,13 @@ You can use any name and any number of records for each messaging platform confi
 
 
 ## Docker
+```bash
+  docker build -t web_check .
+```
+or
+```bash
+  docker pull ghcr.io/2boom-ua/web_check:latest
+```
 ### docker-cli
 ```bash
 docker run -v ./config.json:/web_check/config.json -v ./url_list.json:/web_check/url_list.json --name web_check -e TZ=UTC ghcr.io/2boom-ua/web_check:latest 
