@@ -127,6 +127,13 @@ or
 ```bash
   docker pull ghcr.io/2boom-ua/web_check:latest
 ```
+## Dowload and edit config.json and url_list.json
+```bash
+curl -L -o ./config.json  https://raw.githubusercontent.com/2boom-ua/web_check/main/config.json
+```
+```bash
+curl -L -o ./url_list.json  https://raw.githubusercontent.com/2boom-ua/web_check/main/url_list.json
+```
 ### docker-cli
 ```bash
 docker run -v ./config.json:/web_check/config.json -v ./url_list.json:/web_check/url_list.json --name web_check -e TZ=UTC ghcr.io/2boom-ua/web_check:latest 
