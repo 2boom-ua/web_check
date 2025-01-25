@@ -94,7 +94,6 @@ You can use any name and any number of records for each messaging platform confi
 - **html** - a web-based format using tags for advanced text styling,
 - **text** - raw text without any styling or formatting.
 ```
-"HOST_NAME": "MyHostName",
 "STARTUP_MESSAGE": true,
 "REQUEST_TIMEOUT": 10,
 "DEFAULT_DOT_STYLE": true,
@@ -103,7 +102,6 @@ You can use any name and any number of records for each messaging platform confi
 
 | Item   | Required   | Description   |
 |------------|------------|------------|
-| "HOST_NAME" | string | Host or config name.|
 | STARTUP_MESSAGE | true/false | On/Off startup message. |
 | REQUEST_TIMEOUT | 10 | Request timeout in seconds. Default is 10 sec.|
 | DEFAULT_DOT_STYLE | true/false | Round/Square dots. |
@@ -145,6 +143,7 @@ services:
   web_check:
     container_name: web_check
     image: ghcr.io/2boom-ua/web_check:latest
+    network_mode: host
     volumes:
       - ./config.json:/web_check/config.json
       - ./url_list.json:/web_check/url_list.json
