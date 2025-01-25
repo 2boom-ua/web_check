@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: web_check
     image: web_check:latest
+    network_mode: host
     volumes:
       - ./config.json:/web_check/config.json
       - ./url_list.json:/web_check/url_list.json
