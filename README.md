@@ -148,7 +148,7 @@ services:
       - ./config.json:/web_check/config.json
       - ./url_list.json:/web_check/url_list.json
     environment:
-      - TZ=UTC
+      - TZ=Etc/UTC
     restart: always
 ```
 
