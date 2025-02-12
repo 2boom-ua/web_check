@@ -21,7 +21,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
-logger = logging.getLogger("web_check")
+logger = logging.getLogger(__name__)
 
 
 """Get base url"""
