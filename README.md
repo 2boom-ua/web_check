@@ -138,7 +138,6 @@ docker run -v ./config.json:/web_check/config.json -v ./url_list.json:/web_check
 ```
 ### docker-compose
 ```
-version: "3.8"
 services:
   web_check:
     container_name: web_check
